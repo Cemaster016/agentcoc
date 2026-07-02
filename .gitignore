@@ -1,0 +1,21 @@
+# Environment
+.env
+.venv/
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Reports (generated at runtime)
+reports/*.html
+reports/*.json
+
+# VS Code
+.vscode/
+
+# v2 source (not needed for deployment)
+agentcoc_v2_full/
+
+# Python
+*.egg-info/
+dist/
+build/
