@@ -29,8 +29,9 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
-# Allow running from project root
-sys.path.insert(0, str(Path(__file__).parent.parent))
+# Project root — works regardless of CWD (local or Railway)
+PROJECT_ROOT = Path(__file__).parent.parent.resolve()
+sys.path.insert(0, str(PROJECT_ROOT))
 
 from dotenv import load_dotenv
 load_dotenv()
@@ -64,8 +65,8 @@ app.add_middleware(
     allow_headers     = ["*"],
 )
 
-REPORTS_DIR  = Path("reports")
-FRONTEND_DIR = Path("frontend")
+REPORTS_DIR  = PROJECT_ROOT / "reports"
+FRONTEND_DIR = PROJECT_ROOT / "frontend"
 REPORTS_DIR.mkdir(exist_ok=True)
 
 # Serve the frontend UI at /ui
@@ -249,14 +250,15 @@ def _run_session_sync(req: RunRequest, case_id: str, ws_queue: Optional[asyncio.
 
 # ─── Endpoints ────────────────────────────────────────────────────────────────
 
-@app.get("/")
-async def root() -> Dict:
-    return {
-        "service": "AgentCoC API",
-        "version": "1.0.0",
-        "poster":  "GP-32 — Deep Learning Indaba 2026",
-        "docs":    "/docs",
-    }
+@app.get("/", include_in_schema=False)
+async def root_redirect():
+    from fastapi.responses import RedirectResponse
+    return RedirectResponse(url="/ui")
+
+
+@app.get("/health")
+async def health() -> Dict:
+    return {"status": "ok", "service": "AgentCoC API", "version": "1.0.0"}
 
 
 @app.post("/api/run", response_model=None)
