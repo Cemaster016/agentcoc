@@ -181,6 +181,8 @@ This tool is the practical implementation companion to the research poster:
 
 ---
 
+App : https://web-production-bfa45.up.railway.app/
+
 ## License
 
 MIT — open source, use freely with attribution.
